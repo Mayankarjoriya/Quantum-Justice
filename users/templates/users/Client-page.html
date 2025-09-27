@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Page</title>
+</head>
+<body>
+    <h2>Welcome To Client Page</h2>
+    <h2>Find Lawyer</h2>
+
+    <form method="get">
+        {% for category in categories %}
+            <label>
+                <input type="checkbox" name="categories" value="{{ category.id }}"
+                       {% if category.id|stringformat:"s" in selected_categories %}checked{% endif %}>
+                {{ category.name }}
+            </label><br>
+        {% empty %}
+            <p>No categories available.</p>
+        {% endfor %}
+        <button type="submit">Search</button>
+    </form>
+
+    {% if lawyers %}
+        <h3>Results:</h3>
+        <ul>
+            {% for lawyer in lawyers %}
+                <li>
+                    {{ lawyer.username }} ({{ lawyer.email }}) - Categories:
+                    {% for cat in lawyer.categories.all %}
+                        {{ cat.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif lawyers is not None %}
+        <p>No lawyers found for selected categories.</p>
+    {% endif %}
+</body>
+</html>
